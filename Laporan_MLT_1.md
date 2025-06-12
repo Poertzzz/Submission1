@@ -38,19 +38,78 @@ Untuk mengatasi masalah di atas, tujuan proyek ini adalah:
 ---
 
 ## Data Understanding
-This is a synthetic dataset created using actual data from a financial institution. The data has been modified to remove identifiable features and the numbers transformed to ensure they do not link to original source (financial institution). Contoh: [UCI Machine Learning Repository](https://www.kaggle.com/datasets/kmldas/loan-default-prediction).
+This is a synthetic dataset created using actual data from a financial institution. The data has been modified to remove identifiable features and the numbers transformed to ensure they do not link to original source (financial institution).(https://www.kaggle.com/datasets/kmldas/loan-default-prediction).
 
-Selanjutnya uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
+Berikut adalah contoh penulisan bab **Data Understanding** berdasarkan dataset `Default_Fin.csv` yang telah kamu unggah:
 
-### Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- Index : This is the serial number or unique identifier of the loan taker.
-- Employed : This is a Boolean 1= employed 0= unemployed.
-- Bank Balance : Bank Balance of the loan taker.
-- Annual Salary : Annual salary of the loan taker.
-- Defaulted : This is a Boolean 1= defaulted 0= not defaulted
+---
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
+## Data Understanding
+
+Pada tahap ini, dilakukan eksplorasi awal terhadap dataset *Default\_Fin.csv* untuk memahami karakteristik data yang digunakan dalam proses analisis. Dataset ini terdiri dari informasi finansial individu yang dapat digunakan untuk memprediksi apakah seseorang berpotensi mengalami gagal bayar (*default*).
+
+### Pemuatan Data dan Informasi Dasar
+
+Dataset dimuat menggunakan pustaka `pandas`. Berdasarkan hasil `df.info()`, dataset terdiri dari **10.000 baris dan 5 kolom**, tanpa adanya nilai kosong (*missing values*) pada seluruh kolom.
+
+```python
+# Output ringkasan
+df.shape  -> (10000, 5)
+df.isnull().sum()  -> semua bernilai 0
+```
+
+### Deskripsi Variabel
+
+Berikut adalah penjelasan singkat mengenai tiap kolom dalam dataset:
+
+| Nama Variabel   | Tipe Data | Deskripsi                                                                          |
+| --------------- | --------- | ---------------------------------------------------------------------------------- |
+| `Index`         | `int64`   | Penomoran baris atau identifikasi unik data (tidak memiliki nilai prediktif)       |
+| `Employed`      | `int64`   | Status pekerjaan (1 = bekerja, 0 = tidak bekerja)                                  |
+| `Bank Balance`  | `float64` | Saldo tabungan dalam satuan mata uang                                              |
+| `Annual Salary` | `float64` | Pendapatan tahunan individu                                                        |
+| `Defaulted?`    | `int64`   | Label target, menunjukkan apakah individu mengalami gagal bayar (1) atau tidak (0) |
+
+### Statistik Deskriptif
+
+Berikut ini adalah ringkasan statistik deskriptif untuk kolom numerik:
+
+* Rata-rata saldo bank (`Bank Balance`) adalah sekitar **10.024**, dengan standar deviasi **5.804**.
+* Rata-rata gaji tahunan (`Annual Salary`) adalah **402.203**, dengan penyebaran data yang cukup besar (standar deviasi **160.039**).
+* Hanya sekitar **3.33%** individu yang mengalami gagal bayar (`Defaulted?` = 1), menunjukkan data yang cukup imbalanced.
+* Kolom `Employed` memiliki nilai 1 untuk sekitar **70.56%** data, sisanya adalah individu yang tidak bekerja.
+
+### Analisis Outlier (Identifikasi Awal)
+
+Untuk mengidentifikasi outlier, digunakan visualisasi boxplot dan perhitungan IQR pada fitur numerik seperti `Bank Balance` dan `Annual Salary`. Outlier awal terlihat pada:
+
+* `Bank Balance`: beberapa individu memiliki saldo 0, namun terdapat juga nilai yang sangat tinggi.
+* `Annual Salary`: terlihat distribusi gaji yang sangat lebar, yang memungkinkan adanya nilai ekstrem.
+
+Visualisasi boxplot akan dilakukan pada tahap eksplorasi berikutnya untuk memastikan keberadaan outlier secara visual.
+
+### Penanganan Outlier
+
+Outlier dapat berdampak negatif terhadap performa model prediktif. Oleh karena itu, dalam proyek ini akan dilakukan penanganan outlier menggunakan metode IQR (*Interquartile Range*), terutama untuk fitur `Bank Balance` dan `Annual Salary`. Titik data di luar rentang Q1 - 1.5*IQR dan Q3 + 1.5*IQR akan dianggap sebagai outlier dan dihapus dari dataset.
+
+### Penghapusan Fitur yang Tidak Relevan
+
+Kolom `Index` merupakan identifier unik yang tidak memiliki pengaruh terhadap prediksi dan oleh karena itu dihapus dari dataset:
+
+```python
+df_cleaned = df.drop(columns=['Index'])
+```
+
+### Insight Awal dari Data
+
+* **Insight 1:** Mayoritas individu dalam dataset memiliki pekerjaan, dan kemungkinan gagal bayar lebih rendah pada individu yang bekerja.
+* **Insight 2:** Saldo bank dan gaji tahunan tampaknya memiliki peran penting dalam menentukan kemungkinan gagal bayar.
+* **Insight 3:** Dataset sangat tidak seimbang dari sisi target (`Defaulted?`), sehingga perlu penanganan khusus seperti resampling atau pemilihan metrik evaluasi yang tepat.
+
+---
+
+Kalau kamu ingin saya lanjutkan ke bagian visualisasi atau feature engineering, tinggal bilang ya!
+
 
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
