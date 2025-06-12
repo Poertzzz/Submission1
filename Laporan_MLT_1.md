@@ -1,4 +1,7 @@
 # Laporan Proyek Machine Learning - PUTRA ADE NIRADA
+**Nama:** PUTRA ADE NIRADA
+
+**ID Dicoding:** putraade
 
 ## Domain Proyek: Prediksi Gagal Bayar Pinjaman
 
@@ -113,11 +116,13 @@ Untuk mengidentifikasi outlier, digunakan visualisasi boxplot dan perhitungan IQ
 * `Bank Balance`: beberapa individu memiliki saldo 0, namun terdapat juga nilai yang sangat tinggi.
 * `Annual Salary`: terlihat distribusi gaji yang sangat lebar, yang memungkinkan adanya nilai ekstrem.
 
-Visualisasi boxplot akan dilakukan pada tahap eksplorasi berikutnya untuk memastikan keberadaan outlier secara visual.
+![Gambar 1 Boxplot Outlier Bank Balance](gambar/Bank_Balance_Before.png)
 
 ### Penanganan Outlier
 
 Outlier dapat berdampak negatif terhadap performa model prediktif. Oleh karena itu, dalam proyek ini akan dilakukan penanganan outlier menggunakan metode IQR (*Interquartile Range*), terutama untuk fitur `Bank Balance` dan `Annual Salary`. Titik data di luar rentang Q1 - 1.5*IQR dan Q3 + 1.5*IQR akan dianggap sebagai outlier dan dihapus dari dataset.
+
+![Gambar 2 Boxplot Outlier Bank Balance](gambar/Bank_Balance_After.png)
 
 ### Penghapusan Fitur yang Tidak Relevan
 
@@ -126,6 +131,18 @@ Kolom `Index` merupakan identifier unik yang tidak memiliki pengaruh terhadap pr
 ```python
 df_cleaned = df.drop(columns=['Index'])
 ```
+
+### Visualisai Distribusi Data
+
+Visualisasi seperti histogram memungkinkan kita melihat bentuk, pola, dan sebaran data secara intuitif (misalnya, apakah data terdistribusi normal, miring, atau memiliki beberapa puncak). Ini membantu mengidentifikasi karakteristik dasar data yang tidak terlihat dari angka saja.
+
+![Gambar 3 Histplot Bank Balance](gambar/Bank_Balance_Distribusi.png)
+
+### Coorelation Matrix
+
+Fungsi utama corelation matrix adalah untuk secara cepat dan mudah mengidentifikasi kekuatan dan arah hubungan linier antara setiap pasang variabel dalam dataset.
+
+![Gambar 4 Coor Matrix Bank Balance](gambar/Coor_Matrix.png)
 
 ### Insight Awal dari Data
 
@@ -182,19 +199,6 @@ Setelah proses resampling, dilakukan **feature scaling** menggunakan `StandardSc
 * Feature scaling membantu proses pelatihan model menjadi lebih stabil dan konvergen lebih cepat.
 
 Proses scaling dilakukan **setelah** SMOTEEN untuk memastikan bahwa data sintetis juga berada dalam skala yang sesuai.
-
----
-
-## Modeling
-Mantap, Putra! Berarti kamu sudah menentukan model dengan parameter yang jelas. Dengan kode tersebut, kamu menggunakan:
-
-* **KNN** dengan `n_neighbors=15`
-* **Random Forest** dengan `random_state=42`
-* **Gradient Boosting** juga dengan `random_state=42`
-
-Berikut revisi bagian **Modeling** yang menyesuaikan dengan kode tersebut, agar laporanmu konsisten dan akurat:
-
----
 
 ## Modeling
 
@@ -280,7 +284,7 @@ Pada tahap ini dilakukan evaluasi terhadap tiga model klasifikasi yang digunakan
    Harmonic mean dari precision dan recall.
 
    $$
-   \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+   \text{F1\ Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
    $$
 
    Cocok digunakan ketika terdapat ketidakseimbangan antar kelas.
@@ -328,7 +332,3 @@ Walaupun semua model memiliki akurasi tinggi, namun **Gradient Boosting** menunj
 ---
 
 **---Ini adalah bagian akhir laporan---**
-
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
