@@ -109,7 +109,7 @@ Berikut ini adalah ringkasan statistik deskriptif untuk kolom numerik:
 * Hanya sekitar **3.33%** individu yang mengalami gagal bayar (`Defaulted?` = 1), menunjukkan data yang cukup imbalanced.
 * Kolom `Employed` memiliki nilai 1 untuk sekitar **70.56%** data, sisanya adalah individu yang tidak bekerja.
 
-### Analisis Outlier (Identifikasi Awal)
+### Analisis Outlier
 
 Untuk mengidentifikasi outlier, digunakan visualisasi boxplot dan perhitungan IQR pada fitur numerik seperti `Bank Balance` dan `Annual Salary`. Outlier awal terlihat pada:
 
@@ -118,23 +118,13 @@ Untuk mengidentifikasi outlier, digunakan visualisasi boxplot dan perhitungan IQ
 
 ![Gambar 1 Boxplot Outlier Bank Balance](gambar/Bank_Balance_Before.png)
 
-### Penanganan Outlier
-
-Outlier dapat berdampak negatif terhadap performa model prediktif. Oleh karena itu, dalam proyek ini akan dilakukan penanganan outlier menggunakan metode IQR (*Interquartile Range*), terutama untuk fitur `Bank Balance` dan `Annual Salary`. Titik data di luar rentang Q1 - 1.5*IQR dan Q3 + 1.5*IQR akan dianggap sebagai outlier dan dihapus dari dataset.
-
-![Gambar 2 Boxplot Outlier Bank Balance](gambar/Bank_Balance_After.png)
-
-### Penghapusan Fitur yang Tidak Relevan
-
-Kolom `Index` merupakan identifier unik yang tidak memiliki pengaruh terhadap prediksi dan oleh karena itu dihapus dari dataset:
-
-```python
-df_cleaned = df.drop(columns=['Index'])
-```
-
 ### Visualisai Distribusi Data
 
 Visualisasi seperti histogram memungkinkan kita melihat bentuk, pola, dan sebaran data secara intuitif (misalnya, apakah data terdistribusi normal, miring, atau memiliki beberapa puncak). Ini membantu mengidentifikasi karakteristik dasar data yang tidak terlihat dari angka saja.
+* Pada kolom Employed mayoritas individu dalam dataset memiliki pekerjaan.
+* Pada kolom bank balance menunjukkan bahwa sebagian besar individu dalam dataset memiliki saldo bank yang sangat rendah, bahkan mendekati nol. Ini bisa menjadi indikasi bahwa banyak orang memiliki sedikit atau tidak ada tabungan.
+* Pada Kolom Annual Salary menunjukkan bahwa ada dua kelompok atau sub-populasi yang berbeda dalam data gaji tahunan.
+* Pada kolom Defaulted? Ada sejumlah besar data point yang terkonsentrasi pada nilai 0. Ini berarti mayoritas besar individu dalam dataset tidak melakukan default (gagal bayar). Tingginya bar di sekitar 0 menunjukkan jumlah (count) yang sangat tinggi.
 
 ![Gambar 3 Histplot Bank Balance](gambar/Bank_Balance_Distribusi.png)
 
@@ -143,6 +133,8 @@ Visualisasi seperti histogram memungkinkan kita melihat bentuk, pola, dan sebara
 Fungsi utama corelation matrix adalah untuk secara cepat dan mudah mengidentifikasi kekuatan dan arah hubungan linier antara setiap pasang variabel dalam dataset.
 
 ![Gambar 4 Coor Matrix Bank Balance](gambar/Coor_Matrix.png)
+
+Matriks ini menyoroti hubungan linier antar variabel. Yang paling menonjol adalah korelasi positif yang kuat antara "Employed" dan "Annual Salary". Korelasi lainnya relatif lemah atau bahkan mendekati nol, menunjukkan bahwa hubungan linier antara variabel-variabel tersebut tidak terlalu kuat.
 
 ### Insight Awal dari Data
 
@@ -155,8 +147,21 @@ Fungsi utama corelation matrix adalah untuk secara cepat dan mudah mengidentifik
 ## Data Preparation
 
 Pada tahap ini, dilakukan serangkaian proses untuk menyiapkan data sebelum masuk ke tahap pemodelan machine learning. Langkah-langkah yang dilakukan adalah sebagai berikut:
+### 1. Penghapusan Fitur yang Tidak Relevan
 
-### 1. Pembagian Data (Train-Test Split)
+Kolom `Index` merupakan identifier unik yang tidak memiliki pengaruh terhadap prediksi dan oleh karena itu dihapus dari dataset:
+
+```python
+df_cleaned = df.drop(columns=['Index'])
+```
+### 2. Penanganan Outlier
+
+Outlier dapat berdampak negatif terhadap performa model prediktif. Oleh karena itu, dalam proyek ini akan dilakukan penanganan outlier menggunakan metode IQR (*Interquartile Range*), terutama untuk fitur `Bank Balance` dan `Annual Salary`. Titik data di luar rentang Q1 - 1.5*IQR dan Q3 + 1.5*IQR akan dianggap sebagai outlier dan dihapus dari dataset.
+
+![Gambar 2 Boxplot Outlier Bank Balance](gambar/Bank_Balance_After.png)
+
+
+### 3. Pembagian Data (Train-Test Split)
 
 Langkah pertama adalah membagi data ke dalam dua subset, yaitu data latih (training set) dan data uji (test set), dengan proporsi 80:20. Pembagian ini penting untuk memastikan bahwa model dapat diuji secara adil terhadap data yang belum pernah dilihat sebelumnya.
 
@@ -176,7 +181,7 @@ Langkah pertama adalah membagi data ke dalam dua subset, yaitu data latih (train
 
 Distribusi ini menunjukkan bahwa dataset sangat tidak seimbang (imbalanced), yang dapat menyebabkan model bias terhadap kelas mayoritas (tidak gagal bayar).
 
-### 2. Penyeimbangan Data dengan SMOTEEN
+### 4. Penyeimbangan Data dengan SMOTEEN
 
 Untuk menangani masalah ketidakseimbangan kelas pada data latih, digunakan teknik **SMOTEEN** (Synthetic Minority Oversampling Technique + Edited Nearest Neighbors). Teknik ini menggabungkan metode oversampling dan undersampling:
 
@@ -191,7 +196,7 @@ Tujuan penggunaan SMOTEEN adalah untuk:
 
 > **Catatan penting:** Resampling **hanya dilakukan pada data latih**, bukan pada data uji. Hal ini untuk menghindari kebocoran data (data leakage) yang dapat menyebabkan hasil evaluasi model menjadi tidak valid.
 
-### 3. Feature Scaling dengan StandardScaler
+### 5. Feature Scaling dengan StandardScaler
 
 Setelah proses resampling, dilakukan **feature scaling** menggunakan `StandardScaler`. Teknik ini mentransformasikan setiap fitur numerik agar memiliki distribusi dengan **rata-rata 0 dan standar deviasi 1**. Alasan utama melakukan scaling adalah:
 
@@ -218,32 +223,69 @@ models = {
 }
 ```
 
----
-
-### 1. K-Nearest Neighbors (KNN)
+### **1. K-Nearest Neighbors (KNN)**
 
 * **Parameter digunakan:** `n_neighbors=15`
-* **Alasan penggunaan:** Algoritma ini sederhana dan berbasis jarak. Pemilihan `n_neighbors=15` bertujuan untuk mengurangi variansi dan memberikan prediksi yang lebih stabil di tengah data yang tidak seimbang.
-* **Kelebihan:** Mudah dipahami, tidak memerlukan pelatihan.
-* **Kekurangan:** Tidak efisien di data besar, sensitif terhadap fitur yang tidak diskalakan (oleh karena itu scaling dilakukan sebelumnya).
 
----
+* **Alasan penggunaan:**
+  KNN merupakan algoritma berbasis instance learning yang mengklasifikasikan data baru berdasarkan mayoritas kelas dari *k* tetangga terdekat. Pemilihan `n_neighbors=15` bertujuan untuk mengurangi variansi dan menghasilkan prediksi yang lebih stabil, terutama ketika menghadapi data yang tidak seimbang. Nilai *k* yang lebih besar cenderung memberikan hasil yang lebih general.
 
-### 2. Random Forest Classifier
+* **Cara kerja:**
+  Untuk setiap data uji, algoritma menghitung jarak (misalnya, Euclidean) ke seluruh data latih, lalu memilih *k* data terdekat. Kelas mayoritas dari tetangga tersebut digunakan sebagai prediksi.
 
-* **Parameter digunakan:** Default parameter dengan `random_state=42` untuk memastikan hasil reprodusibel.
-* **Alasan penggunaan:** Algoritma berbasis ansambel ini cocok untuk menangani data dengan banyak fitur dan menangani ketidakseimbangan lebih baik daripada model linear.
-* **Kelebihan:** Handal, tahan terhadap overfitting, dapat memberikan feature importance.
-* **Kekurangan:** Kurang interpretatif, waktu pelatihan lebih lama dibanding model sederhana.
+* **Kelebihan:**
 
----
+  * Mudah dipahami dan diimplementasikan
+  * Tidak memerlukan proses pelatihan (lazy learner)
 
-### 3. Gradient Boosting Classifier
+* **Kekurangan:**
 
-* **Parameter digunakan:** Default parameter dengan `random_state=42`
-* **Alasan penggunaan:** Gradient Boosting bekerja sangat baik untuk data tidak seimbang dan dapat memperbaiki kesalahan dari model sebelumnya secara iteratif.
-* **Kelebihan:** Akurasi tinggi, efektif untuk menangkap pola kompleks.
-* **Kekurangan:** Rentan overfitting, pelatihan lebih lama, sensitif terhadap parameter.
+  * Tidak efisien untuk dataset besar
+  * Performa buruk tanpa normalisasi fitur (sensitif terhadap skala)
+  * Waktu prediksi tinggi karena harus menghitung jarak ke semua data
+
+### **2. Random Forest Classifier**
+
+* **Parameter digunakan:** Default parameters, `random_state=42`
+
+* **Alasan penggunaan:**
+  Random Forest merupakan algoritma *ensemble* berbasis pohon keputusan. Algoritma ini cocok untuk menangani dataset dengan banyak fitur dan memiliki performa yang kuat dalam menghadapi data tidak seimbang karena menggunakan *bagging* dan pengambilan sampel acak. Penggunaan `random_state=42` memastikan hasil yang konsisten setiap kali model dijalankan.
+
+* **Cara kerja:**
+  Membuat banyak pohon keputusan (decision trees) dari subset acak data (bootstrap samples) dan fitur (feature sampling). Setiap pohon menghasilkan prediksi, dan prediksi akhir diambil dari mayoritas (klasifikasi) atau rata-rata (regresi) dari seluruh pohon.
+
+* **Kelebihan:**
+
+  * Tahan terhadap overfitting
+  * Dapat menangani data dengan fitur kompleks dan tidak linier
+  * Memberikan estimasi pentingnya fitur (feature importance)
+
+* **Kekurangan:**
+
+  * Kurang interpretatif dibanding model sederhana
+  * Waktu pelatihan lebih lama dibanding model linear
+
+### **3. Gradient Boosting Classifier**
+
+* **Parameter digunakan:** Default parameters, `random_state=42`
+
+* **Alasan penggunaan:**
+  Gradient Boosting merupakan metode *boosting* yang membangun model secara bertahap, dengan setiap model baru berusaha memperbaiki kesalahan dari model sebelumnya. Sangat efektif untuk menangkap pola-pola kompleks, terutama dalam dataset tidak seimbang.
+
+* **Cara kerja:**
+  Model dibangun secara iteratif, di mana setiap pohon keputusan baru dilatih untuk meminimalkan kesalahan (residual) dari model sebelumnya menggunakan pendekatan *gradient descent*. Output akhir adalah gabungan dari semua model sebelumnya.
+
+* **Kelebihan:**
+
+  * Akurasi tinggi pada banyak masalah klasifikasi
+  * Mampu menangani data tidak seimbang
+  * Cocok untuk dataset dengan relasi non-linier yang kompleks
+
+* **Kekurangan:**
+
+  * Rentan terhadap overfitting jika parameter tidak disetel dengan baik
+  * Membutuhkan waktu pelatihan lebih lama
+  * Sensitif terhadap pemilihan parameter seperti learning rate, jumlah estimators, dll.
 
 ---
 
