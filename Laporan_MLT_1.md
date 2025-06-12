@@ -1,53 +1,53 @@
 # Laporan Proyek Machine Learning - Nama Anda
 
-## Domain Proyek
+## Domain Proyek: Prediksi Gagal Bayar Pinjaman
 
-Pada bagian ini, kamu perlu menuliskan latar belakang yang relevan dengan proyek yang diangkat.
+Sektor keuangan sangat bergantung pada pengelolaan **risiko kredit**, yaitu potensi kerugian akibat **gagal bayar (default)** pinjaman. Gagal bayar dapat menyebabkan kerugian finansial signifikan bagi lembaga keuangan, mulai dari penurunan profitabilitas hingga krisis likuiditas (PWC, 2023).
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Jelaskan mengapa dan bagaimana masalah tersebut harus diselesaikan
-- Menyertakan hasil riset terkait atau referensi. Referensi yang diberikan harus berasal dari sumber yang kredibel dan author yang jelas.
-- Format Referensi dapat mengacu pada penulisan sitasi [IEEE](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf), [APA](https://www.mendeley.com/guides/apa-citation-guide/) atau secara umum seperti [di sini](https://penerbitdeepublish.com/menulis-buku-membuat-sitasi-dengan-mudah/)
-- Sumber yang bisa digunakan [Scholar](https://scholar.google.com/)
+Masalah ini penting untuk diselesaikan karena metode penilaian risiko tradisional kurang akurat dan efisien di tengah kompleksitas produk keuangan dan volume data yang besar. Tingginya angka gagal bayar tidak hanya merugikan lembaga keuangan tetapi juga menghambat pertumbuhan ekonomi. Dengan memprediksi gagal bayar, institusi dapat:
+
+* **Meningkatkan Efisiensi Operasional:** Keputusan pinjaman lebih cepat dan konsisten.
+* **Memitigasi Risiko:** Mengidentifikasi peminjam berisiko tinggi sejak awal untuk mengambil tindakan pencegahan.
+* **Meningkatkan Profitabilitas:** Menekan angka gagal bayar untuk menjaga kualitas portofolio pinjaman.
+* **Memenuhi Kepatuhan Regulasi:** Membantu memenuhi standar manajemen risiko yang ketat.
+
+### Referensi
+
+1.  PWC. (2023). *Global Banking & Capital Markets Outlook: Adapting to disruption and building for the future.* Diakses dari [https://www.pwc.com/gx/en/industries/financial-services/publications/global-banking-capital-markets-outlook.html](https://www.pwc.com/gx/en/industries/financial-services/publications/global-banking-capital-markets-outlook.html) (Akses pada 12 Juni 2025).
 
 ## Business Understanding
 
-Pada bagian ini, kamu perlu menjelaskan proses klarifikasi masalah.
-
-Bagian laporan ini mencakup:
-
 ### Problem Statements
 
-Menjelaskan pernyataan masalah latar belakang:
-- Pernyataan Masalah 1
-- Pernyataan Masalah 2
-- Pernyataan Masalah n
+Proyek ini bertujuan mengatasi masalah utama di lembaga keuangan terkait **prediksi gagal bayar pinjaman**:
 
+* **Pernyataan Masalah 1: Prediksi Risiko yang Kurang Akurat.** Metode lama sering salah dalam mengidentifikasi peminjam berisiko tinggi atau sebaliknya, sehingga menyebabkan kerugian atau hilangnya peluang.
+* **Pernyataan Masalah 2: Proses Pinjaman yang Lambat.** Penilaian risiko yang manual memperlambat persetujuan pinjaman, merugikan pengalaman pelanggan.
+* 
 ### Goals
 
-Menjelaskan tujuan dari pernyataan masalah:
-- Jawaban pernyataan masalah 1
-- Jawaban pernyataan masalah 2
-- Jawaban pernyataan masalah n
+Untuk mengatasi masalah di atas, tujuan proyek ini adalah:
 
-Semua poin di atas harus diuraikan dengan jelas. Anda bebas menuliskan berapa pernyataan masalah dan juga goals yang diinginkan.
+* **Tujuan 1:** Meningkatkan akurasi dalam memprediksi peminjam berisiko tinggi.
+* **Tujuan 2:** Membuat proses penilaian risiko yang lebih cepat dan otomatis.
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Menambahkan bagian “Solution Statement” yang menguraikan cara untuk meraih goals. Bagian ini dibuat dengan ketentuan sebagai berikut: 
+### Solution Statements
+* **Membangun Model Klasifikasi Ensemble.**
+    Saya akan membuat model klasifikasi menggunakan setidaknya dua algoritma *ensemble* (seperti **Random Forest** dan **Gradient Boosting**). Model ini akan memprediksi apakah pinjaman akan **gagal bayar** atau tidak. Kinerja model akan diukur dengan **ROC AUC Score**, **F1-Score**, dan **Recall** (khususnya untuk kelas gagal bayar) pada data uji. Saya berharap metrik ini akan meningkat dibandingkan model dasar (misalnya, Regresi Logistik).
 
-    ### Solution statements
-    - Mengajukan 2 atau lebih solution statement. Misalnya, menggunakan dua atau lebih algoritma untuk mencapai solusi yang diinginkan atau melakukan improvement pada baseline model dengan hyperparameter tuning.
-    - Solusi yang diberikan harus dapat terukur dengan metrik evaluasi.
+---
 
 ## Data Understanding
-Paragraf awal bagian ini menjelaskan informasi mengenai data yang Anda gunakan dalam proyek. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
+This is a synthetic dataset created using actual data from a financial institution. The data has been modified to remove identifiable features and the numbers transformed to ensure they do not link to original source (financial institution). Contoh: [UCI Machine Learning Repository](https://www.kaggle.com/datasets/kmldas/loan-default-prediction).
 
 Selanjutnya uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
 
 ### Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
+- Index : This is the serial number or unique identifier of the loan taker.
+- Employed : This is a Boolean 1= employed 0= unemployed.
+- Bank Balance : Bank Balance of the loan taker.
+- Annual Salary : Annual salary of the loan taker.
+- Defaulted : This is a Boolean 1= defaulted 0= not defaulted
 
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
